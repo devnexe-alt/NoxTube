@@ -65,11 +65,11 @@ class SidebarButton(QWidget):
         self.icon_lbl.setFixedSize(26, 26)
         self.icon_lbl.setAlignment(Qt.AlignCenter)
         self.icon_lbl.setFont(QFont("Material Symbols Rounded", 20))
-        self.icon_lbl.setStyleSheet("color:#f1f1f1; background:transparent;")
+        self.icon_lbl.setStyleSheet("color:#f1f1f1; border:none; background:transparent;")
 
         self.text_lbl = QLabel(label)
         self.text_lbl.setFont(QFont("Segoe UI", 13))
-        self.text_lbl.setStyleSheet("color:#f1f1f1; background:transparent;")
+        self.text_lbl.setStyleSheet("color:#f1f1f1; border:none; background:transparent;")
         self.text_lbl.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         self._layout.addWidget(self.icon_lbl)
@@ -105,12 +105,12 @@ class SidebarButton(QWidget):
             bg, fw = "#1f1f1f", "normal"
         else:
             bg, fw = "transparent", "normal"
-        self.setStyleSheet(f"SidebarButton {{ background:{bg}; border-radius:10px; }}")
+        self.setStyleSheet(f"SidebarButton {{ background:{bg}; border:none; border-radius:10px; }}")
         self.text_lbl.setStyleSheet(
-            f"color:#f1f1f1; background:transparent; font-weight:{fw};"
+            f"color:#f1f1f1; border:none; background:transparent; font-weight:{fw};"
         )
         self.icon_lbl.setStyleSheet(
-            f"color:{'#ffffff' if self._active else '#f1f1f1'}; background:transparent;"
+            f"color:{'#ffffff' if self._active else '#f1f1f1'}; border:none; background:transparent;"
         )
 
     def enterEvent(self, e):
@@ -145,7 +145,7 @@ class _SectionLabel(QLabel):
         self.setFixedHeight(32)
         self.setContentsMargins(16, 0, 0, 0)
         self.setFont(QFont("Segoe UI", 11, QFont.Bold))
-        self.setStyleSheet("color:#f1f1f1; background:transparent;")
+        self.setStyleSheet("color:#f1f1f1; background:transparent; border:none;")
 
 
 class Sidebar(QWidget):
@@ -165,7 +165,7 @@ class Sidebar(QWidget):
         self._active_key: str = None
 
         self.setFixedWidth(WIDTH_EXPANDED)
-        self.setStyleSheet("background:#0f0f0f;")
+        self.setStyleSheet("background:#0f0f0f; border-right: 1px solid #272727;")
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -175,7 +175,7 @@ class Sidebar(QWidget):
         scroll.setWidgetResizable(True)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll.setStyleSheet("QScrollArea{border:none; background:transparent;}")
+        scroll.setStyleSheet("QScrollArea{ border:none; background:transparent; }")
 
         self._container = QWidget()
         self._container.setStyleSheet("background:transparent;")

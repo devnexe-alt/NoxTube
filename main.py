@@ -20,9 +20,7 @@ from ui.video_player import NativePlayer
 from ui.titlebar import CustomTitleBar
 from ui.sidebar import Sidebar
 
-TITLEBAR_HEIGHT = 33
-FILTER_CHIPS = ["Все", "Видеоигры", "Minecraft", "Музыка", "Новости", "Недавно", "Просмотрено"]
-
+TITLEBAR_HEIGHT = 36
 
 class MainWindow(FramelessMainWindow):
     def __init__(self):
@@ -33,8 +31,8 @@ class MainWindow(FramelessMainWindow):
 
         self.custom_title_bar = CustomTitleBar(self)
         self.setTitleBar(self.custom_title_bar)
-        # Подключаем гамбургер
         self.custom_title_bar.sidebar_toggle.connect(self._toggle_sidebar)
+        self.custom_title_bar.search_requested.connect(self._on_titlebar_search)
 
         if sys.platform == "win32":
             try:
@@ -92,56 +90,6 @@ class MainWindow(FramelessMainWindow):
         right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(0)
         body_layout.addWidget(right, stretch=1)
-
-        # Search bar
-        search_bar = QWidget()
-        search_bar.setObjectName("searchBar")
-        search_bar.setFixedHeight(64)
-        sb_layout = QHBoxLayout(search_bar)
-        sb_layout.setContentsMargins(16, 8, 16, 8)
-        sb_layout.setSpacing(8)
-        sb_layout.addStretch(1)
-
-        self.search_input = QLineEdit()
-        self.search_input.setObjectName("searchInput")
-        self.search_input.setPlaceholderText("Введите запрос...")
-        self.search_input.setFixedHeight(40)
-        self.search_input.setMinimumWidth(400)
-        self.search_input.setMaximumWidth(700)
-        self.search_input.returnPressed.connect(self.on_search)
-
-        btn_search = QPushButton("Поиск")
-        btn_search.setObjectName("searchBtn")
-        btn_search.setFixedHeight(40)
-        btn_search.clicked.connect(self.on_search)
-
-        sb_layout.addWidget(self.search_input)
-        sb_layout.addWidget(btn_search)
-        sb_layout.addStretch(1)
-        right_layout.addWidget(search_bar)
-
-        # Filter chips
-        filter_bar = QWidget()
-        filter_bar.setFixedHeight(52)
-        filter_bar.setStyleSheet(
-            "background:#0f0f0f; border-bottom: 1px solid #272727;"
-        )
-        fl = QHBoxLayout(filter_bar)
-        fl.setContentsMargins(16, 8, 16, 8)
-        fl.setSpacing(8)
-
-        self.filter_buttons = []
-        for i, chip_text in enumerate(FILTER_CHIPS):
-            btn = QPushButton(chip_text)
-            btn.setFixedHeight(32)
-            btn.setCheckable(True)
-            btn.setCursor(Qt.PointingHandCursor)
-            btn.setStyleSheet(self._chip_style(active=(i == 0)))
-            btn.clicked.connect(lambda _checked, b=btn: self._on_chip_clicked(b))
-            self.filter_buttons.append(btn)
-            fl.addWidget(btn)
-        fl.addStretch()
-        right_layout.addWidget(filter_bar)
 
         # Content stack: 0=grid, 1=player
         self.content_stack = QStackedWidget()
@@ -283,13 +231,18 @@ class MainWindow(FramelessMainWindow):
         self.status_label.setText("Подключение...")
         try:
             await self.plugin_manager.set_active_plugin("Invidious")
-            self.status_label.setText("Invidious: Online")
+            self.status_label.setText("")
             await self.load_trending()
         except Exception as e:
             self.status_label.setText(f"Ошибка: {e}")
 
+    def _on_titlebar_search(self, query: str):
+        """Поиск из тайтлбара."""
+        self.status_label.setText("Поиск...")
+        asyncio.create_task(self.perform_search(query))
+
     def on_search(self):
-        query = self.search_input.text().strip()
+        query = self.custom_title_bar.search_input.text().strip()
         if query:
             self.status_label.setText("Поиск...")
             asyncio.create_task(self.perform_search(query))
