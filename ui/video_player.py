@@ -124,7 +124,7 @@ class NativePlayer(QWidget):
         self.back_btn = QPushButton("← Назад")
         self.back_btn.setFixedSize(90, 32)
         self.back_btn.setCursor(Qt.PointingHandCursor)
-        self.back_btn.setStyleSheet("""
+        self.back_btn.setStyleSheet('''
             QPushButton {
                 background-color: #272727;
                 color: #f1f1f1;
@@ -134,7 +134,7 @@ class NativePlayer(QWidget):
                 font-family: 'Segoe UI';
             }
             QPushButton:hover { background-color: #3f3f3f; }
-        """)
+        ''')
         back_row.addWidget(self.back_btn)
         back_row.addStretch()
         left_layout.addLayout(back_row)
@@ -232,11 +232,11 @@ class NativePlayer(QWidget):
         self.related_scroll = QScrollArea()
         self.related_scroll.setWidgetResizable(True)
         self.related_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.related_scroll.setStyleSheet("""
+        self.related_scroll.setStyleSheet('''
             QScrollArea { border: none; background: transparent; }
             QScrollBar:vertical { background: transparent; width: 6px; }
             QScrollBar::handle:vertical { background: #3f3f3f; border-radius: 3px; }
-        """)
+        ''')
 
         self.related_container = QWidget()
         self.related_container.setStyleSheet("background: transparent;")
@@ -263,7 +263,7 @@ class NativePlayer(QWidget):
         btn = QPushButton(text)
         btn.setFixedHeight(34)
         btn.setCursor(Qt.PointingHandCursor)
-        btn.setStyleSheet("""
+        btn.setStyleSheet('''
             QPushButton {
                 background-color: #272727;
                 color: #f1f1f1;
@@ -274,7 +274,7 @@ class NativePlayer(QWidget):
                 padding: 0 14px;
             }
             QPushButton:hover { background-color: #3f3f3f; }
-        """)
+        ''')
         return btn
 
     # ── Публичный API ─────────────────────────────────────────────────────────
@@ -360,7 +360,7 @@ class NativePlayer(QWidget):
     def stop(self):
         self.embed_timer.stop()
         if self.process.state() == QProcess.Running:
-            self.process.terminate()
+            self.process.kill()
             self.process.waitForFinished(1000)
         self.current_hwnd = None
 
