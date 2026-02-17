@@ -1,0 +1,47 @@
+/* Главное окно [cite: 6] */
+QMainWindow, QWidget#mainContainer {
+    background-color: #0f0f0f; /* Истинный цвет YouTube Dark */
+}
+
+/* Поиск [cite: 9] */
+QLineEdit {
+    background-color: #121212;
+    border: 1px solid #333333;
+    border-radius: 20px; /* Скругление как в новом дизайне */
+    padding: 8px 15px;
+    color: white;
+    font-size: 14px;
+}
+
+/* Сайдбар [cite: 7] */
+QListWidget#sidebar {
+    background-color: #0f0f0f;
+    border-right: 1px solid #222;
+}
+
+QListWidget#sidebar::item {
+    height: 40px;
+    padding-left: 15px;
+    border-radius: 10px;
+    margin: 2px 8px;
+}
+
+QListWidget#sidebar::item:selected {
+    background-color: #272727;
+    color: white;
+}
+
+/* Сетка видео [cite: 3] */
+QListWidget#videoList {
+    background-color: transparent;
+    border: none;
+}
+
+/* Кнопка поиска [cite: 10] */
+QPushButton#searchBtn {
+    background-color: #222222;
+    border: 1px solid #333333;
+    border-radius: 18px;
+    color: white;
+    font-weight: bold;
+}
