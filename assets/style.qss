@@ -1,47 +1,190 @@
-/* Главное окно [cite: 6] */
-QMainWindow, QWidget#mainContainer {
-    background-color: #0f0f0f; /* Истинный цвет YouTube Dark */
+/* ═══════════════════════════════════════════════
+   NoxTube — YouTube Dark Theme
+   ═══════════════════════════════════════════════ */
+
+/* Главное окно */
+QMainWindow, QWidget {
+    background-color: #0f0f0f;
+    color: #f1f1f1;
+    font-family: "Segoe UI", sans-serif;
 }
 
-/* Поиск [cite: 9] */
-QLineEdit {
-    background-color: #121212;
-    border: 1px solid #333333;
-    border-radius: 20px; /* Скругление как в новом дизайне */
-    padding: 8px 15px;
-    color: white;
-    font-size: 14px;
-}
-
-/* Сайдбар [cite: 7] */
+/* ── САЙДБАР ─────────────────────────────────── */
 QListWidget#sidebar {
     background-color: #0f0f0f;
-    border-right: 1px solid #222;
+    border: none;
+    padding: 8px 0px;
+    outline: none;
 }
 
 QListWidget#sidebar::item {
     height: 40px;
-    padding-left: 15px;
+    padding-left: 12px;
     border-radius: 10px;
-    margin: 2px 8px;
+    margin: 1px 8px;
+    color: #f1f1f1;
+    font-size: 13px;
+    font-family: "Segoe UI", sans-serif;
+}
+
+QListWidget#sidebar::item:hover {
+    background-color: #272727;
 }
 
 QListWidget#sidebar::item:selected {
     background-color: #272727;
-    color: white;
+    color: #ffffff;
+    font-weight: bold;
 }
 
-/* Сетка видео [cite: 3] */
+/* ── ПОИСК ───────────────────────────────────── */
+QWidget#searchBar {
+    background-color: #0f0f0f;
+    border-bottom: 1px solid #272727;
+    padding: 8px 16px;
+}
+
+QLineEdit#searchInput {
+    background-color: #121212;
+    border: 1px solid #303030;
+    border-radius: 20px;
+    padding: 8px 20px;
+    color: #f1f1f1;
+    font-size: 14px;
+    font-family: "Segoe UI", sans-serif;
+    selection-background-color: #3ea6ff;
+}
+
+QLineEdit#searchInput:focus {
+    border: 1px solid #3ea6ff;
+    background-color: #0f0f0f;
+}
+
+QLineEdit#searchInput::placeholder {
+    color: #717171;
+}
+
+QPushButton#searchBtn {
+    background-color: #272727;
+    border: 1px solid #303030;
+    border-radius: 20px;
+    color: #f1f1f1;
+    font-size: 13px;
+    font-family: "Segoe UI", sans-serif;
+    padding: 8px 20px;
+    min-width: 80px;
+}
+
+QPushButton#searchBtn:hover {
+    background-color: #3f3f3f;
+    border-color: #717171;
+}
+
+QPushButton#searchBtn:pressed {
+    background-color: #555555;
+}
+
+/* ── ФИЛЬТРЫ / ЧИПСЫ ─────────────────────────── */
+QScrollArea#filterBar {
+    background-color: #0f0f0f;
+    border: none;
+    border-bottom: 1px solid #272727;
+    max-height: 52px;
+}
+
+QPushButton.filterChip {
+    background-color: #272727;
+    border: none;
+    border-radius: 8px;
+    color: #f1f1f1;
+    font-size: 13px;
+    font-family: "Segoe UI", sans-serif;
+    padding: 6px 14px;
+    margin: 4px 4px;
+}
+
+QPushButton.filterChip:hover {
+    background-color: #3f3f3f;
+}
+
+QPushButton.filterChip[active="true"] {
+    background-color: #f1f1f1;
+    color: #0f0f0f;
+    font-weight: bold;
+}
+
+/* ── СЕТКА ВИДЕО ─────────────────────────────── */
 QListWidget#videoList {
     background-color: transparent;
     border: none;
+    outline: none;
 }
 
-/* Кнопка поиска [cite: 10] */
-QPushButton#searchBtn {
-    background-color: #222222;
-    border: 1px solid #333333;
-    border-radius: 18px;
-    color: white;
-    font-weight: bold;
+QListWidget#videoList::item {
+    border-radius: 12px;
+}
+
+QListWidget#videoList::item:hover {
+    background-color: #1a1a1a;
+}
+
+QListWidget#videoList::item:selected {
+    background-color: #1a1a1a;
+}
+
+/* ── СТАТУС БАР ──────────────────────────────── */
+QLabel#statusLabel {
+    color: #717171;
+    font-size: 11px;
+    padding: 4px 16px;
+    background-color: #0f0f0f;
+    border-top: 1px solid #272727;
+}
+
+/* ── ТАЙТЛБАР ────────────────────────────────── */
+CustomTitleBar {
+    background-color: #0f0f0f;
+    border-bottom: 1px solid #272727;
+}
+
+/* ── СКРОЛЛБАРЫ ──────────────────────────────── */
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #3f3f3f;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #717171;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0;
+}
+
+QScrollBar:horizontal {
+    background: transparent;
+    height: 8px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #3f3f3f;
+    border-radius: 4px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #717171;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0;
 }
