@@ -18,19 +18,16 @@ from PyQt5.QtGui import QFont, QPainter, QPainterPath, QColor
 SIDEBAR_SECTIONS = [
     (None, [
         ("\ue88a", "Главная",    "home"),
-        ("\ue8f4", "Тренды",     "trending"),
-        ("\ue553", "Shorts",     "shorts"),
+        ("\uf49a", "Shorts",     "shorts"),
     ]),
     ("Вы", [
-        ("\ue0be", "Подписки",   "subscriptions"),
-        ("\ue916", "История",    "history"),
-        ("\ue065", "Плейлисты",  "playlists"),
+        ("\ue064", "Подписки",   "subscriptions"),
+        ("\ue889", "История",    "history"),
+        ("\ue05f", "Плейлисты",  "playlists"),
     ]),
     ("Интересное", [
-        ("\ue02c", "Фильмы",     "movies"),
-        ("\ue627", "Игры",       "gaming"),
-        ("\ue030", "Музыка",     "music"),
-        ("\ue63a", "Новости",    "news"),
+        ("\uf135", "Игры",       "gaming"),
+        ("\ue405", "Музыка",     "music"),
     ]),
 ]
 

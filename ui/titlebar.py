@@ -2,11 +2,11 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QLabel,
-                             QPushButton, QLineEdit)
+                             QPushButton, QFrame, QLineEdit)
 from core.constants import MaterialIcon
 from utils.resources import resource_path
 
-TITLEBAR_HEIGHT = 36
+TITLEBAR_HEIGHT = 40
 
 
 class CustomTitleBar(QWidget):
@@ -19,7 +19,7 @@ class CustomTitleBar(QWidget):
         self.setFixedHeight(TITLEBAR_HEIGHT)
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(4, 0, 4, 0)
+        layout.setContentsMargins(4, 4, 4, 4)
         layout.setSpacing(0)
 
         # ── Левая часть: гамбургер + иконка ──────────────────────────────────
@@ -55,6 +55,11 @@ class CustomTitleBar(QWidget):
         # Запрещаем перетаскивание окна при клике на поиск
         self.search_input.mousePressEvent = self._search_click
 
+        self.bottom_line = QFrame(self)
+        self.bottom_line.setFixedHeight(1)
+        # Устанавливаем цвет линии (белый с прозрачностью 10%)
+        self.bottom_line.setStyleSheet("background-color: rgba(255, 255, 255, 0.1); border: none;")
+
         self.search_btn = QPushButton(MaterialIcon.SEARCH)
         self.search_btn.setObjectName("titleSearchBtn")
         self.search_btn.setFixedSize(26, 26)
@@ -84,7 +89,7 @@ class CustomTitleBar(QWidget):
         # ── Правая часть: кнопки окна ─────────────────────────────────────────
         right = QWidget()
         right_layout = QHBoxLayout(right)
-        right_layout.setContentsMargins(0, 0, 2, 0)
+        right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(0)
 
         self.minimize_btn = self._make_btn(MaterialIcon.MINIMIZE, "minimize")
@@ -130,6 +135,11 @@ class CustomTitleBar(QWidget):
         text = self.search_input.text().strip()
         if text:
             self.search_requested.emit(text)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        # Линия всегда в самом низу на всю ширину
+        self.bottom_line.setGeometry(0, self.height() - 1, self.width(), 1)
 
     def set_search_text(self, text: str):
         self.search_input.setText(text)

@@ -20,7 +20,7 @@ from ui.video_player import NativePlayer
 from ui.titlebar import CustomTitleBar
 from ui.sidebar import Sidebar
 
-TITLEBAR_HEIGHT = 36
+TITLEBAR_HEIGHT = 40
 
 class MainWindow(FramelessMainWindow):
     def __init__(self):
@@ -106,6 +106,41 @@ class MainWindow(FramelessMainWindow):
         self.video_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.video_list.setItemDelegate(VideoDelegate(self.cache, self.video_list))
         self.video_list.itemClicked.connect(self.on_video_clicked)
+        self.video_list.setStyleSheet("""
+            /* Сама дорожка (невидимая зона) */
+            QScrollBar:vertical {
+                border: none;
+                background: transparent;
+                width: 14px; 
+                margin: 15px 0 15px 0;
+            }
+
+            /* Ползунок */
+            QScrollBar::handle:vertical {
+                background: rgba(255, 255, 255, 0.1); /* Цвет ползунка */
+                border-radius: 2px;                  /* Маленькое скругление для тонкой линии */
+                min-height: 40px;
+                
+                /* ГЛАВНОЕ: отступы слева и справа делают его тонким */
+                /* 14px (общая ширина) - 5px (слева) - 5px (справа) = 4px (чистая ширина) */
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+
+            /* При наведении становится чуть ярче */
+            QScrollBar::handle:vertical:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            /* Убираем всё лишнее */
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+            
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: none;
+            }
+        """)
 
         # Player
         try:
@@ -118,12 +153,6 @@ class MainWindow(FramelessMainWindow):
 
         self.content_stack.addWidget(self.video_list)
         self.content_stack.addWidget(self.player)
-
-        # Status bar
-        self.status_label = QLabel("Готово")
-        self.status_label.setObjectName("statusLabel")
-        self.status_label.setFixedHeight(24)
-        right_layout.addWidget(self.status_label)
 
     # ── Chip styles ───────────────────────────────────────────────────────────
 
@@ -160,7 +189,6 @@ class MainWindow(FramelessMainWindow):
     def on_video_clicked(self, item):
         data = item.data(Qt.UserRole)
         v_id = data.get('id')
-        self.status_label.setText("Получение ссылки...")
         self.content_stack.setCurrentIndex(1)
 
         # Передаём метаданные в плеер сразу
@@ -184,9 +212,8 @@ class MainWindow(FramelessMainWindow):
             stream_url = await stream_task
             if stream_url and hasattr(self.player, 'play_raw_url'):
                 self.player.play_raw_url(stream_url)
-                self.status_label.setText("Воспроизведение...")
             else:
-                self.status_label.setText("Ошибка: не удалось получить поток")
+                print("Ошибка: не удалось получить поток")
 
             related = await related_task
             # Убираем само видео из похожих
@@ -195,14 +222,12 @@ class MainWindow(FramelessMainWindow):
                 self.player.set_related(related)
 
         except Exception as e:
-            self.status_label.setText(f"Ошибка: {e}")
             print(f"[Player] {e}")
 
     def show_list(self):
         if hasattr(self.player, 'stop'):
             self.player.stop()
         self.content_stack.setCurrentIndex(0)
-        self.status_label.setText("Готово")
 
     # ── Styles ────────────────────────────────────────────────────────────────
 
@@ -228,23 +253,19 @@ class MainWindow(FramelessMainWindow):
     # ── Plugin & data ─────────────────────────────────────────────────────────
 
     async def init_plugins(self):
-        self.status_label.setText("Подключение...")
         try:
             await self.plugin_manager.set_active_plugin("Invidious")
-            self.status_label.setText("")
             await self.load_trending()
         except Exception as e:
-            self.status_label.setText(f"Ошибка: {e}")
+            print(f"Ошибка: {e}")
 
     def _on_titlebar_search(self, query: str):
         """Поиск из тайтлбара."""
-        self.status_label.setText("Поиск...")
         asyncio.create_task(self.perform_search(query))
 
     def on_search(self):
         query = self.custom_title_bar.search_input.text().strip()
         if query:
-            self.status_label.setText("Поиск...")
             asyncio.create_task(self.perform_search(query))
 
     async def perform_search(self, query: str):
@@ -253,9 +274,8 @@ class MainWindow(FramelessMainWindow):
         try:
             results = await self.plugin_manager.active_plugin.search(query)
             self.update_video_list(results)
-            self.status_label.setText(f"Найдено: {len(results)}")
         except Exception as e:
-            self.status_label.setText(f"Ошибка: {e}")
+            print(f"Ошибка: {e}")
 
     async def load_trending(self):
         if not self.plugin_manager.active_plugin:
@@ -264,7 +284,7 @@ class MainWindow(FramelessMainWindow):
             results = await self.plugin_manager.active_plugin.get_trending()
             self.update_video_list(results)
         except Exception as e:
-            self.status_label.setText(f"Ошибка трендов: {e}")
+            print(f"Ошибка трендов: {e}")
 
     def update_video_list(self, items):
         self.video_list.clear()
